@@ -1,11 +1,8 @@
 module.exports = {
-  entry: './src/solver.js',
-  devServer: {
-    contentBase: './dist'
-  },
+  entry: './src/sudoku-solver.js',
   output: {
-    filename: 'solver.js',
-    library: "solver",
+    filename: 'sudoku-sudoku-solver.js',
+    library: "sudoku-solver",
     libraryTarget: "commonjs2",
   },
   module: {

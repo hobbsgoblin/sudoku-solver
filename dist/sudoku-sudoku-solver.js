@@ -82,110 +82,10 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/solver.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/sudoku-solver.js");
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./src/solver.js":
-/*!***********************!*\
-  !*** ./src/solver.js ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = solve;
-
-var _sudokuCore = __webpack_require__(/*! ./sudoku-core */ "./src/sudoku-core.js");
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var nextCell = function nextCell(curY, curX) {
-  if (curX === 8 && curY === 8) return undefined;
-  if (curX === 8) return [curY + 1, 0];
-  return [curY, curX + 1];
-};
-
-var getValidAllowed = function getValidAllowed(state, _ref, invalidVals) {
-  var _ref2 = _slicedToArray(_ref, 2),
-      y = _ref2[0],
-      x = _ref2[1];
-
-  return (0, _sudokuCore.getAllowed)(state, [y, x]).filter(function (val) {
-    return !invalidVals[y][x].includes(val);
-  });
-};
-
-function solve(state, _ref3, invalidVals, fixedVals) {
-  var _ref4 = _slicedToArray(_ref3, 2),
-      y = _ref4[0],
-      x = _ref4[1];
-
-  if (fixedVals[y][x] === 'fixed') {
-    if (y === 8 && x === 8) return {
-      solved: true,
-      completedState: state
-    };
-
-    var _nextCell = nextCell(y, x),
-        _nextCell2 = _slicedToArray(_nextCell, 2),
-        _nextY = _nextCell2[0],
-        _nextX = _nextCell2[1];
-
-    return solve(state, [_nextY, _nextX], invalidVals, fixedVals);
-  }
-
-  var allowedVals = getValidAllowed(state, [y, x], invalidVals);
-  if (!allowedVals.length) return false;
-  var tryVal = allowedVals[0]; // TODO: randomize which allowedVal we use to prevent bias towards lower numbers
-
-  var newState = (0, _sudokuCore.copyState)(state);
-  newState[y][x] = tryVal;
-  if (y === 8 && x === 8) return {
-    solved: true,
-    completedState: newState
-  };
-
-  var _nextCell3 = nextCell(y, x),
-      _nextCell4 = _slicedToArray(_nextCell3, 2),
-      nextY = _nextCell4[0],
-      nextX = _nextCell4[1];
-
-  var result = solve(newState, [nextY, nextX], invalidVals, fixedVals);
-  if (_typeof(result) === 'object' && result.solved === true) return result;
-
-  if (result === false) {
-    invalidVals[y][x] = invalidVals[y][x].concat(tryVal); // TODO: make immutable
-
-    var newInvalid = (0, _sudokuCore.copyState)(invalidVals).map(function (invRow, invY) {
-      // Remove old state
-      if (invY > y) return invRow.fill([]);
-      if (invY === y) return invRow.fill([], x + 1);
-      return invRow;
-    });
-    newState = undefined; // TODO: Test to see if making these undefined actually reduces memory use
-
-    invalidVals = undefined;
-    result = undefined;
-    return solve(state, [y, x], newInvalid, fixedVals);
-  }
-}
-
-/***/ }),
 
 /***/ "./src/sudoku-core.js":
 /*!****************************!*\
@@ -453,7 +353,107 @@ var squareCoordMap = {
   9: [[6, 6], [6, 7], [6, 8], [7, 6], [7, 7], [7, 8], [8, 6], [8, 7], [8, 8]]
 };
 
+/***/ }),
+
+/***/ "./src/sudoku-solver.js":
+/*!******************************!*\
+  !*** ./src/sudoku-solver.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = solve;
+
+var _sudokuCore = __webpack_require__(/*! ./sudoku-core */ "./src/sudoku-core.js");
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var nextCell = function nextCell(curY, curX) {
+  if (curX === 8 && curY === 8) return undefined;
+  if (curX === 8) return [curY + 1, 0];
+  return [curY, curX + 1];
+};
+
+var getValidAllowed = function getValidAllowed(state, _ref, invalidVals) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      y = _ref2[0],
+      x = _ref2[1];
+
+  return (0, _sudokuCore.getAllowed)(state, [y, x]).filter(function (val) {
+    return !invalidVals[y][x].includes(val);
+  });
+};
+
+function solve(state, _ref3, invalidVals, fixedVals) {
+  var _ref4 = _slicedToArray(_ref3, 2),
+      y = _ref4[0],
+      x = _ref4[1];
+
+  if (fixedVals[y][x] === 'fixed') {
+    if (y === 8 && x === 8) return {
+      solved: true,
+      completedState: state
+    };
+
+    var _nextCell = nextCell(y, x),
+        _nextCell2 = _slicedToArray(_nextCell, 2),
+        _nextY = _nextCell2[0],
+        _nextX = _nextCell2[1];
+
+    return solve(state, [_nextY, _nextX], invalidVals, fixedVals);
+  }
+
+  var allowedVals = getValidAllowed(state, [y, x], invalidVals);
+  if (!allowedVals.length) return false;
+  var tryVal = allowedVals[0]; // TODO: randomize which allowedVal we use to prevent bias towards lower numbers
+
+  var newState = (0, _sudokuCore.copyState)(state);
+  newState[y][x] = tryVal;
+  if (y === 8 && x === 8) return {
+    solved: true,
+    completedState: newState
+  };
+
+  var _nextCell3 = nextCell(y, x),
+      _nextCell4 = _slicedToArray(_nextCell3, 2),
+      nextY = _nextCell4[0],
+      nextX = _nextCell4[1];
+
+  var result = solve(newState, [nextY, nextX], invalidVals, fixedVals);
+  if (_typeof(result) === 'object' && result.solved === true) return result;
+
+  if (result === false) {
+    invalidVals[y][x] = invalidVals[y][x].concat(tryVal); // TODO: make immutable
+
+    var newInvalid = (0, _sudokuCore.copyState)(invalidVals).map(function (invRow, invY) {
+      // Remove old state
+      if (invY > y) return invRow.fill([]);
+      if (invY === y) return invRow.fill([], x + 1);
+      return invRow;
+    });
+    newState = undefined; // TODO: Test to see if making these undefined actually reduces memory use
+
+    invalidVals = undefined;
+    result = undefined;
+    return solve(state, [y, x], newInvalid, fixedVals);
+  }
+}
+
 /***/ })
 
 /******/ });
-//# sourceMappingURL=solver.js.map
+//# sourceMappingURL=sudoku-sudoku-solver.js.map

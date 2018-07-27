@@ -1,4 +1,4 @@
-import solve from '../src/solver';
+import solve from '../src/sudoku-solver';
 import {getInitState, checkSolutionIsValid} from "../src/sudoku-core";
 
 const puzzle =
