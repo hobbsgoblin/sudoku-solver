@@ -1,7 +1,7 @@
 module.exports = {
   entry: './src/sudoku-solver.js',
   output: {
-    filename: 'sudoku-sudoku-solver.js',
+    filename: 'sudoku-solver.js',
     library: "sudoku-solver",
     libraryTarget: "commonjs2",
   },
