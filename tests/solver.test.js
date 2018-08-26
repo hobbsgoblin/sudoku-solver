@@ -1,5 +1,5 @@
 import solve from '../src/sudoku-solver';
-import {getInitState, checkSolutionIsValid} from "../src/sudoku-core";
+import {checkSolutionIsValid} from "../src/sudoku-core";
 
 const puzzle =
   [
@@ -14,9 +14,7 @@ const puzzle =
     [null,5,1,null,null,4,6,null,2]
   ];
 
-const fixedVals = puzzle.map(row => row.map(val => val === null ? null : 'fixed'));
-
 test('Solves a sudoku', () => {
-  const solution = solve(puzzle, [0,0], getInitState([]), fixedVals);
+  const solution = solve(puzzle);
   expect(checkSolutionIsValid(solution.completedState)).toBe(true);
 });
