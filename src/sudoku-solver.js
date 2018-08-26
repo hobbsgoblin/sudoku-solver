@@ -1,4 +1,4 @@
-import {copyState, getAllowed, getInitState, printState} from "./sudoku-core";
+import {copyState, getAllowed, getInitState, printState} from "sudoku-core";
 
 const nextCell = (curY, curX) => {
   if (curX === 8 && curY === 8) return undefined;
@@ -15,6 +15,10 @@ const createFixedValsFromState = (state) => {
   return state.map(row => row.map(val => val === null ? null : 'fixed'));
 };
 
+const getRandValFromArray = arr => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
 export default function solve(state) {
   const invalidVals = getInitState([]);
   const fixedVals = createFixedValsFromState(state);
@@ -29,7 +33,7 @@ function _solve(state, [y, x], invalidVals, fixedVals) {
   }
   const allowedVals = getValidAllowed(state, [y, x], invalidVals);
   if (!allowedVals.length) return false;
-  const tryVal = allowedVals[0];  // TODO: randomize which allowedVal we use to prevent bias towards lower numbers
+  const tryVal = getRandValFromArray(allowedVals);  // This is randomized to prevent bias towards lower numbers when used to generate puzzles
   let newState = copyState(state);
   newState[y][x] = tryVal;
   if (y === 8 && x === 8) return {solved: true, completedState: newState};

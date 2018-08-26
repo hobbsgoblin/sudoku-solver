@@ -1,5 +1,5 @@
 import solve from '../src/sudoku-solver';
-import {checkSolutionIsValid} from "../src/sudoku-core";
+import {checkSolutionIsValid} from "sudoku-core";
 
 const puzzle =
   [
