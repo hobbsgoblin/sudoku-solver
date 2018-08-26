@@ -398,7 +398,21 @@ var getValidAllowed = function getValidAllowed(state, _ref, invalidVals) {
   });
 };
 
-function solve(state, _ref3, invalidVals, fixedVals) {
+var createFixedValsFromState = function createFixedValsFromState(state) {
+  return state.map(function (row) {
+    return row.map(function (val) {
+      return val === null ? null : 'fixed';
+    });
+  });
+};
+
+function solve(state) {
+  var invalidVals = (0, _sudokuCore.getInitState)([]);
+  var fixedVals = createFixedValsFromState(state);
+  return _solve(state, [0, 0], invalidVals, fixedVals);
+}
+
+function _solve(state, _ref3, invalidVals, fixedVals) {
   var _ref4 = _slicedToArray(_ref3, 2),
       y = _ref4[0],
       x = _ref4[1];
@@ -414,7 +428,7 @@ function solve(state, _ref3, invalidVals, fixedVals) {
         _nextY = _nextCell2[0],
         _nextX = _nextCell2[1];
 
-    return solve(state, [_nextY, _nextX], invalidVals, fixedVals);
+    return _solve(state, [_nextY, _nextX], invalidVals, fixedVals);
   }
 
   var allowedVals = getValidAllowed(state, [y, x], invalidVals);
@@ -433,7 +447,8 @@ function solve(state, _ref3, invalidVals, fixedVals) {
       nextY = _nextCell4[0],
       nextX = _nextCell4[1];
 
-  var result = solve(newState, [nextY, nextX], invalidVals, fixedVals);
+  var result = _solve(newState, [nextY, nextX], invalidVals, fixedVals);
+
   if (_typeof(result) === 'object' && result.solved === true) return result;
 
   if (result === false) {
@@ -449,7 +464,7 @@ function solve(state, _ref3, invalidVals, fixedVals) {
 
     invalidVals = undefined;
     result = undefined;
-    return solve(state, [y, x], newInvalid, fixedVals);
+    return _solve(state, [y, x], newInvalid, fixedVals);
   }
 }
 
